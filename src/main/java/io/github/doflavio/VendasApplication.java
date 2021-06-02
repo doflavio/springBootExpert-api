@@ -12,16 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class VendasApplication {
 
+    public static void main(String[] args) {
+        System.out.println("Método main");
+        SpringApplication.run(VendasApplication.class,args);
+    }
+}
+/*
     @Bean
     public CommandLineRunner commandLineRunner(@Autowired Clientes clientes){
         return args -> {
+            System.out.println("CommandLineRunner");
             Cliente c = new Cliente(null, "Fulano");
             clientes.save(c);
         };
     }
+    */
 
-
-    public static void main(String[] args) {
-        SpringApplication.run(VendasApplication.class,args);
-    }
-}
