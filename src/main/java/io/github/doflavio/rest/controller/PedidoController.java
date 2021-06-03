@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -28,13 +29,6 @@ public class PedidoController {
         this.service = service;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Integer save(@RequestBody PedidoDTO dto){
-        Pedido pedido = service.salvar(dto);
-        return pedido.getId();
-    }
-
     @GetMapping("{id}")
     public InformacoesPedidoDTO getById(@PathVariable Integer id){
         return service.obterPedidoCompleto(id)
@@ -43,6 +37,13 @@ public class PedidoController {
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado.")
 
                 );
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Integer save(@RequestBody @Valid PedidoDTO dto){
+        Pedido pedido = service.salvar(dto);
+        return pedido.getId();
     }
 
     @PatchMapping("{id}")
