@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PedidoDTO {
-    private Integer id;
+    private Integer cliente;
     private BigDecimal total;
     private List<ItemPedidoDTO> items;
 
