@@ -9,17 +9,14 @@ import io.github.doflavio.domain.repository.Clientes;
 import io.github.doflavio.domain.repository.ItemsPedido;
 import io.github.doflavio.domain.repository.Pedidos;
 import io.github.doflavio.domain.repository.Produtos;
+import io.github.doflavio.exception.PedidoNaoEncontradoException;
 import io.github.doflavio.exception.RegraNegocioException;
 import io.github.doflavio.rest.dto.ItemPedidoDTO;
 import io.github.doflavio.rest.dto.PedidoDTO;
 import io.github.doflavio.service.PedidoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -59,6 +56,16 @@ public class PedidoServiceImpl implements PedidoService {
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
         return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        repository.findById(id)
+                .map( pedido -> {
+                    pedido.setStatus(statusPedido);
+                    return repository.save(pedido);
+                }).orElseThrow( () -> new PedidoNaoEncontradoException());
     }
 
     private List<ItemPedido> converterItens(Pedido pedido,List<ItemPedidoDTO> items){

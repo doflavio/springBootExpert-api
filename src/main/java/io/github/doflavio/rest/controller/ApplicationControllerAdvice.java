@@ -1,5 +1,6 @@
 package io.github.doflavio.rest.controller;
 
+import io.github.doflavio.exception.PedidoNaoEncontradoException;
 import io.github.doflavio.exception.RegraNegocioException;
 import io.github.doflavio.rest.ApiErros;
 import org.springframework.http.HttpStatus;
@@ -16,5 +17,11 @@ public class ApplicationControllerAdvice {
     public ApiErros handleRegraNegocioException(RegraNegocioException ex){
         String mensagemErro = ex.getMessage();
         return new ApiErros(mensagemErro);
+    }
+
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErros handlePedidoNotFoundException(PedidoNaoEncontradoException ex){
+        return new ApiErros(ex.getMessage());
     }
 }

@@ -2,8 +2,10 @@ package io.github.doflavio.rest.controller;
 
 import io.github.doflavio.domain.entity.ItemPedido;
 import io.github.doflavio.domain.entity.Pedido;
-import io.github.doflavio.rest.dto.InformacaoItemPedidoDto;
-import io.github.doflavio.rest.dto.InformacoesPedidoDto;
+import io.github.doflavio.domain.enums.StatusPedido;
+import io.github.doflavio.rest.dto.AtualizacaoStatusPedidoDTO;
+import io.github.doflavio.rest.dto.InformacaoItemPedidoDTO;
+import io.github.doflavio.rest.dto.InformacoesPedidoDTO;
 import io.github.doflavio.rest.dto.PedidoDTO;
 import io.github.doflavio.service.PedidoService;
 import org.springframework.http.HttpStatus;
@@ -34,7 +36,7 @@ public class PedidoController {
     }
 
     @GetMapping("{id}")
-    public InformacoesPedidoDto getById(@PathVariable Integer id){
+    public InformacoesPedidoDTO getById(@PathVariable Integer id){
         return service.obterPedidoCompleto(id)
                 .map( p -> converter(p))
                 .orElseThrow( () ->
@@ -43,8 +45,15 @@ public class PedidoController {
                 );
     }
 
-    private InformacoesPedidoDto converter(Pedido pedido){
-        return InformacoesPedidoDto
+    @PatchMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,@RequestBody AtualizacaoStatusPedidoDTO dto){
+        String novoStatus = dto.getNovoStatus();
+        service.atualizaStatus(id, StatusPedido.valueOf(novoStatus));
+    }
+
+    private InformacoesPedidoDTO converter(Pedido pedido){
+        return InformacoesPedidoDTO
                 .builder()
                 .codigo(pedido.getId())
                 .dataPedido(pedido.getDataPedido().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
@@ -57,14 +66,14 @@ public class PedidoController {
 
     }
 
-    private List<InformacaoItemPedidoDto> converter(List<ItemPedido> itens){
+    private List<InformacaoItemPedidoDTO> converter(List<ItemPedido> itens){
         if(CollectionUtils.isEmpty(itens)){
             return Collections.emptyList();
         }
 
         return itens.stream()
                 .map(
-                        item -> InformacaoItemPedidoDto
+                        item -> InformacaoItemPedidoDTO
                                 .builder()
                         .descricaoProduto(item.getProduto().getDescricao())
                         .precoUnitario(item.getProduto().getPreco())
