@@ -21,13 +21,13 @@ public class Cliente {
     @Column(name = "id")
     private Integer id;
 
+    @NotEmpty(message = "Campo Nome é obrigatório")
     @Column(name = "nome", length = 100)
-    @NotEmpty(message = "Campo nome é obrigatório")
     private String nome;
 
-    @Column(name = "cpf", length = 11)
     @NotEmpty(message = "Campo CPF é obrigatório")
     @CPF(message = "Informe um CPF válido")
+    @Column(name = "cpf", length = 11)
     private String cpf;
 
     @JsonIgnore
