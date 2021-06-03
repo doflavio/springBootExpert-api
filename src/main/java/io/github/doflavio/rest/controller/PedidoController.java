@@ -22,4 +22,8 @@ public class PedidoController {
         Pedido pedido = service.salvar(dto);
         return pedido.getId();
     }
+
+    public void testarDevTools(){
+        //no intelijj ctrl + F9
+    }
 }
