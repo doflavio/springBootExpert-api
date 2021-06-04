@@ -1,5 +1,6 @@
-package io.github.doflavio;
+package io.github.doflavio.security.jwt;
 
+import io.github.doflavio.VendasApplication;
 import io.github.doflavio.domain.entity.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
