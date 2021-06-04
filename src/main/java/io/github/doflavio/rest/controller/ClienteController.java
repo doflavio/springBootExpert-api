@@ -2,6 +2,7 @@ package io.github.doflavio.rest.controller;
 
 import io.github.doflavio.domain.entity.Cliente;
 import io.github.doflavio.domain.repository.Clientes;
+import io.swagger.annotations.*;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Api("Api de Clientes")
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {
@@ -40,12 +42,22 @@ public class ClienteController {
         return clientes.findAll(example);
     }
 
+    @ApiOperation("Obter detalhes de um cliente")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Cliente encontrado"),
+            @ApiResponse(code = 4004, message = "Cliente não encontrado para o ID informado")
+    })
     @GetMapping("/{id}")
-    public Cliente getClienteById(@PathVariable Integer id) {
+    public Cliente getClienteById(@PathVariable @ApiParam("Id do cliente") Integer id) {
         return clientes.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Cliente não encontrado"));
     }
 
+    @ApiOperation("Salvar um novo cliente")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Cliente salvo com sucesso"),
+            @ApiResponse(code = 400, message = "Erro de validação")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente save(@RequestBody @Valid Cliente cliente){
