@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.xml.ws.Response;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +47,7 @@ public class ClienteController {
             @ApiResponse(code = 200, message = "Cliente encontrado"),
             @ApiResponse(code = 4004, message = "Cliente não encontrado para o ID informado")
     })
+
     @GetMapping("/{id}")
     public Cliente getClienteById(@PathVariable @ApiParam("Id do cliente") Integer id) {
         return clientes.findById(id)
